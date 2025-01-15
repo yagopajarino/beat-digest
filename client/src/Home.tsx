@@ -13,7 +13,6 @@ function Home() {
     const fetchTrackId = async () => {
       const track = await api.getTrackOfTheDay()
       if (track) {
-        // console.log(tracks)
         setId(track.id)
       }
     }

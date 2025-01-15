@@ -6,7 +6,7 @@ import api from "./api"
 interface Track {
     id: number
     title: string
-    youtubeId: string
+    youtubeid: string
     date: string
 }   
 
@@ -15,7 +15,6 @@ const Player = () => {
     const [track, setTrack] = useState<Track>()
 
     useEffect(() => {
-        console.log(params)
         const fetchTrack = async () => {
             if (!params.pid) return
             const response = await api.getTrackById(params.pid)
@@ -26,7 +25,7 @@ const Player = () => {
 
     return (
         <div>
-            {track? <YtIframe youtubeId={track?.youtubeId??""} youtubeTitle={track?.title??""} />: ""}
+            {track? <YtIframe youtubeId={track.youtubeid??""} youtubeTitle={track.title??""} />: ""}
         </div>
     )
 }
