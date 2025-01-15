@@ -1,24 +1,39 @@
 import { Request, Response } from 'express';
+import pg from 'pg'
 
 const helloWorld = (req: Request, res: Response) => {
     res.status(200).send('Hello World');
 }
 
-const trackOfTheDay = (req: Request, res: Response) => {
-    const track = {
-        id: 2,
+const trackOfTheDay = async (req: Request, res: Response) => {
+    const { Client } = pg
+    const client = new Client()
+    await client.connect()
+
+    const queryResults = await client.query('select * from tracks t where t."date" = current_date;')
+    const rows = queryResults.rows
+    if (rows.length > 0) {
+        res.status(200).send({id: rows[0].id});
     }
-    res.status(200).send(track);
+    else {
+        res.status(200).send('No track found');
+    }
 }
 
-const trackById = (req: Request, res: Response) => {
+const trackById = async (req: Request, res: Response) => {
     const id = req.params.id;
-    if (id == "1") {
-        res.status(200).send({ id: 1, date: "01/13/2024", title: "BREAKFAST || Morning Vinyl House Mix con Loïc B2B Pato Mallet", youtubeId: "VAXuZM8iLL4" }) 
-    } else if (id == "2") {
-        res.status(200).send({ id: 2, date: "01/14/2024", title: "Smooth Jazz House Music Mix - Chill Living Room Playlist | Cozy Relaxing Kitchen Set", youtubeId: "r55w6BEjIyI" }) 
-    } else {
-        res.status(200).send(`Track with id ${id}`);
+    const { Client } = pg
+    const client = new Client()
+    await client.connect()
+
+    const queryResults = await client.query('select * from tracks t where t.id = $1;', [id])
+    const rows = queryResults.rows
+
+    if (rows.length > 0) {
+        res.status(200).send(rows[0]);
+    }
+    else {
+        res.status(404).send('Track not found');
     }
 }
 
