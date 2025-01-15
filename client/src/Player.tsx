@@ -1,15 +1,27 @@
 import { useParams } from "react-router"
 import YtIframe from "./youtube"
+import { useEffect, useState } from "react"
+import api from "./api"
 
-const TRACKS = [
-    { id: 1, date: "01/13/2024", title: "BREAKFAST || Morning Vinyl House Mix con Loïc B2B Pato Mallet", youtubeId: "VAXuZM8iLL4" },
-    { id: 2, date: "01/14/2024", title: "Yoyaku instore session with Satoshi Tomiie b2b Tomoki Tamura", youtubeId: "yM2kEQtiWgE" },
-    { id: 3, date: "01/15/2024", title: "Soulful Romantic House Music Mix - Cozy Lunch Living Room DJ Set | Chill Relax Playlist", youtubeId: "4VjTKbTcm90" },
-  ]
+interface Track {
+    id: number
+    title: string
+    youtubeId: string
+    date: string
+}   
 
 const Player = () => {
     let params = useParams()
-    const track = TRACKS.find((track) => track.id === Number(params.pid))
+    const [track, setTrack] = useState<Track>()
+
+    useEffect(() => {
+        const fetchTrack = async () => {
+            if (!params.id) return
+            const response = await api.getTrackById(params.id)
+            setTrack(response.data)
+        }
+        fetchTrack()
+    }, [params])
 
     return (
         <div>
