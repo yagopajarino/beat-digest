@@ -15,18 +15,18 @@ const Player = () => {
     const [track, setTrack] = useState<Track>()
 
     useEffect(() => {
+        console.log(params)
         const fetchTrack = async () => {
-            if (!params.id) return
-            const response = await api.getTrackById(params.id)
-            setTrack(response.data)
+            if (!params.pid) return
+            const response = await api.getTrackById(params.pid)
+            setTrack(response)
         }
         fetchTrack()
     }, [params])
 
     return (
         <div>
-            {/* <p className=" font-popins text-center pb-3 text-lg font-medium">{track?.date}</p> */}
-            <YtIframe youtubeId={track?.youtubeId??""} youtubeTitle={track?.title??""} />
+            {track? <YtIframe youtubeId={track?.youtubeId??""} youtubeTitle={track?.title??""} />: ""}
         </div>
     )
 }

@@ -11,10 +11,10 @@ function Home() {
 
   useEffect(() => {
     const fetchTrackId = async () => {
-      const response = await api.getTrackOfTheDay()
-      const tracks = response.data
-      if (tracks.length) {
-        setId(tracks[0].id)
+      const track = await api.getTrackOfTheDay()
+      if (track) {
+        // console.log(tracks)
+        setId(track.id)
       }
     }
     fetchTrackId()
