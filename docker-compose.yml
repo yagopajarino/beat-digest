@@ -1,0 +1,38 @@
+services:
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3313:80"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    container_name: beat-digest-fronend
+    env_file:
+      - ./client/.env
+
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "3413:5000"
+    depends_on:
+      - database
+    container_name: beat-digest-backend
+    env_file:
+      - ./api/.env
+
+  database:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+    container_name: beat-digest-database
+    env_file:
+      - ./.env
+
+volumes:
+  postgres_data:
